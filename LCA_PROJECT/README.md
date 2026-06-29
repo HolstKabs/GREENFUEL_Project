@@ -1,7 +1,7 @@
 # brightway-ecoinvent-project
 
 Small Brightway2 workflow for:
-- importing ecoinvent 3.9.1 in EcoSpold2 format, and
+- importing ecoinvent 3.12 in EcoSpold2 format, and
 - running a SURE biomass LCA model with deterministic and Monte Carlo results.
 
 ## Project structure
