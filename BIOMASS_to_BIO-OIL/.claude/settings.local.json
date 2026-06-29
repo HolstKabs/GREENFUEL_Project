@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Read(//c/Users/s233432/AppData/Local/miniconda3/envs/bw25/**)",
+      "PowerShell(& \"C:\\\\Users\\\\s233432\\\\AppData\\\\Local\\\\miniconda3\\\\envs\\\\bw25\\\\python.exe\" \"C:\\\\Users\\\\s233432\\\\AppData\\\\Local\\\\Temp\\\\temp_script1.py\" 2>&1)",
+      "Read(//c/Users/s233432/OneDrive - Danmarks Tekniske Universitet/Skrivebord/**)",
+      "Bash(./.venv/Scripts/python.exe -c ' *)",
+      "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe -c ' *)",
+      "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe -c \"import bw2data; print\\('bw2data in brightway .venv', bw2data.__version__\\)\")",
+      "Bash(conda env *)",
+      "Bash(ls -d .venv venv env)",
+      "Bash(where conda *)",
+      "Bash(where python *)",
+      "Bash(where py *)",
+      "Bash(py -0p)",
+      "Bash(PYTHONIOENCODING=utf-8 py -3.11 -c \"import bw2data as bd; print\\('3.11 bw2data', bd.__version__\\); print\\('projects:', [p.name for p in bd.projects]\\)\")",
+      "Bash(PYTHONIOENCODING=utf-8 py -3.12 -c \"import bw2data as bd; print\\('3.12 bw2data', bd.__version__\\)\")",
+      "Bash(PYTHONIOENCODING=utf-8 py -3.11 -c \"import bw2data,sys; print\\(sys.executable\\)\")",
+      "Read(//c/Users/s233432/anaconda3/**)",
+      "Read(//c/Users/s233432/miniconda3/**)",
+      "Read(//c/Users/s233432/AppData/Local/anaconda3/**)",
+      "Read(//c/Users/s233432/AppData/Local/pylca/Brightway3/**)",
+      "Read(//c/Users/s233432/**)",
+      "Bash(PYTHONIOENCODING=utf-8 C:/Users/s233432/AppData/Local/miniconda3/envs/bw25/python.exe -c ' *)",
+      "Bash(PYTHONIOENCODING=utf-8 py -3.11 -c ' *)",
+      "Bash(PYTHONIOENCODING=utf-8 ./.venv/Scripts/python.exe)",
+      "Bash(PYTHONIOENCODING=utf-8 \"C:/Users/s233432/AppData/Local/miniconda3/envs/bw25/python.exe\")"
+    ]
+  }
+}
