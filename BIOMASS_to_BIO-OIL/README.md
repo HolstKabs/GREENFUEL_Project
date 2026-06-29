@@ -14,8 +14,8 @@ For full setup, model explanation, and troubleshooting, read:
 
 
 2. Set your workbook path key and file path in [tutorial_workbook_paths.py](tutorial_workbook_paths.py).
-
-3. Run the tutorial workflow:
+  - Edit your workbook with the corresponding biomass types' ultimate and proximate analysis
+4. Run the tutorial workflow:
 
 ```powershell
 python tutorial.py
