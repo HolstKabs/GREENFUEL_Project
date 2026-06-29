@@ -12,9 +12,6 @@ For full setup, model explanation, and troubleshooting, read:
 
 1. Activate the virtual environment:
 
-```powershell
-& "c:\Users\s233432\OneDrive - Danmarks Tekniske Universitet\Skrivebord\Programming ALI\.venv\Scripts\Activate.ps1"
-```
 
 2. Set your workbook path key and file path in [tutorial_workbook_paths.py](tutorial_workbook_paths.py).
 
