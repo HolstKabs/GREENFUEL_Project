@@ -1,0 +1,414 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{parskip}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    urlcolor=blue!70!black,
+    citecolor=blue!70!black,
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{orange!80!black},
+}
+
+\title{%
+    \textbf{GREENFUEL Toolkit}\\[0.5em]
+    \large Technical User Manual\\[0.3em]
+    \normalsize Developer \& Researcher Reference
+}
+\author{Technical University of Denmark (DTU)}
+\date{\today}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Overview}
+
+This manual is the technical reference for the GREENFUEL toolkit. It is intended for researchers and developers who wish to understand the internal architecture, extend the code, or integrate the package into other workflows. For a step-by-step end-user guide, see \texttt{docs/userguide.tex}.
+
+The toolkit is composed of two independent components:
+
+\begin{itemize}
+    \item \textbf{Thermodynamic modelling engine} (\texttt{biomass\_pyrolysis\_equilibrium/}) — a Python package that reads feedstock data from Excel, computes thermodynamic properties, solves Gibbs free energy minimisation across a temperature--pressure grid, and exports yields and diagnostics.
+    \item \textbf{Streamlit web application} (\texttt{webapp/}) — an interactive browser interface that wraps the modelling engine and the LCA results.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Architecture}
+
+\subsection{High-Level Pipeline}
+
+\begin{verbatim}
+Excel Workbook (Feedstock_table.xlsx)
+        |
+        v
+  [data/parser.py]
+  Parse & normalise feedstock + bio-oil sheets
+  Match each feedstock to a bio-oil profile (4-tier fuzzy matching)
+        |
+        v
+  [thermodynamics/]
+  Compute HHV, LHV, delta-Hf, delta-Sf, delta-Gf for each feedstock
+        |
+        v
+  [species/]
+  Build candidate species pool: gas species + bio-oil pseudo-species + char
+        |
+        v
+  [optimization/gibbs_solver.py]
+  Minimise total Gibbs free energy at each (T, P) condition (SLSQP)
+        |
+        v
+  [optimization/post_processor.py]
+  Convert equilibrium moles -> oil/gas/char yields (ar, dry, daf)
+        |
+        v
+  [qa/reporting.py + qa/artifacts.py]
+  Build results DataFrame, export to Excel, write PNG charts
+\end{verbatim}
+
+\subsection{Package Layout}
+
+\begin{verbatim}
+biomass_pyrolysis_equilibrium/
+├── __init__.py
+├── config.py
+├── models.py
+├── data/
+│   ├── parser.py
+│   └── normalizer.py
+├── thermodynamics/
+│   ├── heating_value.py
+│   ├── properties.py
+│   └── stoichiometry.py
+├── species/
+│   ├── bio_oil.py
+│   ├── candidate_pool.py
+│   └── registry.py
+├── optimization/
+│   ├── gibbs_solver.py
+│   ├── executor.py
+│   └── post_processor.py
+├── workflow/
+│   └── orchestrator.py
+└── qa/
+    ├── reporting.py
+    ├── plotting.py
+    ├── artifacts.py
+    └── validator.py
+\end{verbatim}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Configuration API}
+
+All configuration is passed via dataclasses defined in \texttt{config.py}. No global state or environment variables are used.
+
+\subsection{\texttt{EquilibriumConfig}}
+
+Controls the Gibbs solver behaviour for a single feedstock at a single condition.
+
+\begin{longtable}{lll}
+\toprule
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\
+\midrule
+\texttt{temperature\_k} & \texttt{float} & Reaction temperature in Kelvin \\
+\texttt{pressure\_pa} & \texttt{float} & Reaction pressure in Pascals \\
+\texttt{n\_starts} & \texttt{int} & Number of multi-start attempts (default: 3) \\
+\texttt{realism\_mode} & \texttt{bool} & Apply empirical yield caps (default: True) \\
+\bottomrule
+\end{longtable}
+
+\subsection{\texttt{SweepConfig}}
+
+Defines the temperature--pressure grid for batch runs.
+
+\begin{longtable}{lll}
+\toprule
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\
+\midrule
+\texttt{temperature\_c\_min} & \texttt{float} & Minimum temperature (°C) \\
+\texttt{temperature\_c\_max} & \texttt{float} & Maximum temperature (°C) \\
+\texttt{temperature\_steps} & \texttt{int} & Number of temperature points \\
+\texttt{pressure\_bar\_min} & \texttt{float} & Minimum pressure (bar) \\
+\texttt{pressure\_bar\_max} & \texttt{float} & Maximum pressure (bar) \\
+\texttt{pressure\_steps} & \texttt{int} & Number of pressure points \\
+\bottomrule
+\end{longtable}
+
+\subsection{\texttt{WorkflowConfig}}
+
+Top-level configuration passed to \texttt{run\_workflow()}.
+
+\begin{longtable}{lll}
+\toprule
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\
+\midrule
+\texttt{enable\_sweep} & \texttt{bool} & Run over the full T/P grid \\
+\texttt{fast\_tutorial\_mode} & \texttt{bool} & Reduced grid for rapid testing \\
+\texttt{realism\_mode} & \texttt{bool} & Passed through to EquilibriumConfig \\
+\texttt{sweep} & \texttt{SweepConfig} & Grid definition \\
+\bottomrule
+\end{longtable}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Module Reference}
+
+\subsection{\texttt{data/parser.py}}
+
+\textbf{Key function:} \texttt{parse\_workbook(path: Path) -> tuple[list[FeedstockRecord], list[BioOilRecord]]}
+
+Reads both required sheets from the Excel workbook and returns lists of domain objects. The parser:
+
+\begin{enumerate}
+    \item Auto-detects header rows by scanning for known column names.
+    \item Normalises numerical values (comma decimals, ranges, whitespace) via \texttt{data/normalizer.py}.
+    \item Applies a four-tier matching strategy to pair each \texttt{FeedstockRecord} with a \texttt{BioOilRecord}:
+    \begin{enumerate}
+        \item Exact canonical match
+        \item Synonym-normalised match (e.g.\ ``wood'' $\leftrightarrow$ ``timber'')
+        \item Token-overlap fuzzy match (\texttt{difflib.SequenceMatcher})
+        \item Levenshtein distance fallback (\texttt{thefuzz.token\_set\_ratio}, configurable threshold)
+    \end{enumerate}
+    \item Falls back to a generic bio-oil pseudo-species if no match is found.
+\end{enumerate}
+
+\textbf{Warning codes} are attached to each record (e.g.\ \texttt{MAP\_SYNONYM\_NORMALIZED}, \texttt{MAP\_SUBCATEGORY\_LEVENSHTEIN}) and propagated to the Excel output.
+
+\subsection{\texttt{thermodynamics/heating\_value.py}}
+
+Implements the Channiwala--Parikh HHV correlation and the LHV derivation:
+
+\begin{equation}
+    \mathrm{HHV} = 0.3491C + 1.1783H + 0.1005S - 0.1034O - 0.0151N - 0.0211\mathrm{Ash} \quad [\mathrm{MJ/kg}]
+\end{equation}
+
+\begin{equation}
+    \mathrm{LHV} = \mathrm{HHV} - h_{we}\left(\frac{9H}{100} + \frac{M}{100}\right) \quad [\mathrm{MJ/kg}]
+\end{equation}
+
+where $h_{we} = 2.26$\,MJ/kg is the latent heat of water vaporisation, $H$ is hydrogen content (wt\% daf), and $M$ is moisture content (wt\% ar).
+
+\subsection{\texttt{thermodynamics/properties.py}}
+
+Computes the standard thermodynamic properties of each feedstock:
+
+\begin{align}
+    \Delta h_f^\circ &= \mathrm{LHV} \cdot 1000 + n_C \Delta h_{f,CO_2}^\circ + \tfrac{n_H}{2} \Delta h_{f,H_2O}^\circ + n_S \Delta h_{f,SO_2}^\circ \\
+    \Delta g_f^\circ &= \Delta h_f^\circ - T_{\mathrm{ref}} \cdot \Delta s_f^\circ
+\end{align}
+
+Entropy ($\Delta s_f^\circ$) is currently estimated via a calibrated heuristic; a literature-backed group-contribution method is planned for a future release.
+
+\subsection{\texttt{thermodynamics/stoichiometry.py}}
+
+Converts proximate/ultimate analysis to a molar element inventory for 1\,kg as-received feedstock:
+
+\begin{align}
+    m_{\mathrm{dry}} &= 1 - \frac{M}{100} \\
+    m_{\mathrm{reactive}} &= m_{\mathrm{dry}} \left(1 - \frac{\mathrm{Ash}}{100}\right) \\
+    n_e &= \frac{1000 \cdot m_{\mathrm{reactive}} \cdot (w_{e,\mathrm{daf}}/100)}{MW_e} \quad e \in \{C,H,O,N,S\}
+\end{align}
+
+\subsection{\texttt{species/registry.py}}
+
+Contains the thermodynamic database for standard gas species (CO, CO$_2$, H$_2$, H$_2$O, CH$_4$, C$_2$H$_4$, C$_2$H$_6$, N$_2$, SO$_2$, H$_2$S). Properties are stored as NASA polynomial coefficients; $\Delta h_f^\circ$ and $s^\circ$ at the reference temperature are derived from these.
+
+\subsection{\texttt{species/bio\_oil.py} and \texttt{species/candidate\_pool.py}}
+
+\texttt{bio\_oil.py} converts a matched \texttt{BioOilRecord} into a single pseudo-species with thermodynamic properties computed by the same pipeline as the feedstock. \texttt{candidate\_pool.py} assembles the full list of species passed to the solver: all gas species from the registry, the bio-oil pseudo-species, and a solid char species.
+
+\subsection{\texttt{optimization/gibbs\_solver.py}}
+
+The Gibbs minimisation objective:
+
+\begin{equation}
+    \min G_{\mathrm{total}} = \sum_{i=1}^{N_c} n_i \mu_i
+\end{equation}
+
+subject to element balance constraints:
+
+\begin{equation}
+    \sum_{i=1}^{N_c} a_{j,i} n_i = b_j \quad j \in \{C,H,O,N,S\}
+\end{equation}
+
+The chemical potential of each gas species is:
+
+\begin{equation}
+    \mu_i = g_i^0(T) + RT \ln\!\left(y_i \frac{P}{P^0}\right), \qquad g_i^0(T) = \Delta h_{f,i} - T s_i^0
+\end{equation}
+
+The solver uses \texttt{scipy.optimize.minimize} with the SLSQP method and three random multi-start initial guesses to avoid local minima. Convergence is assessed by the constraint residual norm.
+
+\subsection{\texttt{optimization/post\_processor.py}}
+
+Converts equilibrium mole fractions back to mass yields:
+
+\begin{align}
+    Y_{\mathrm{oil,ar}} &= \sum_{i \in \mathrm{liquid}} n_i \cdot MW_i / 1000 \\
+    Y_{\mathrm{oil,dry}} &= Y_{\mathrm{oil,ar}} \big/ \left(1 - \tfrac{M}{100}\right) \\
+    Y_{\mathrm{oil,daf}} &= Y_{\mathrm{oil,ar}} \big/ \left[\left(1 - \tfrac{M}{100}\right)\left(1 - \tfrac{\mathrm{Ash}}{100}\right)\right]
+\end{align}
+
+\subsection{\texttt{workflow/orchestrator.py}}
+
+\textbf{Key function:} \texttt{run\_workflow(workbook\_path: Path, config: WorkflowConfig) -> list[WorkflowRowResult]}
+
+Calls \texttt{parse\_workbook}, constructs the T/P sweep grid, iterates over all feedstock--condition combinations calling \texttt{solve\_feedstock\_equilibrium} from \texttt{optimization/executor.py}, and returns the collected results.
+
+\subsection{\texttt{qa/} — Reporting, Plotting, Export}
+
+\begin{itemize}
+    \item \texttt{reporting.py} — converts \texttt{WorkflowRowResult} lists to a \texttt{pandas.DataFrame} with all metadata and unit conversions.
+    \item \texttt{plotting.py} — produces Van Krevelen, ternary C--H--O, and yield-vs-temperature charts using \texttt{matplotlib}.
+    \item \texttt{artifacts.py} — writes the results DataFrame to a multi-sheet Excel workbook and optionally saves charts as PNG files.
+    \item \texttt{validator.py} — inspects solver convergence rates and flags rows with high residuals.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Streamlit Web Application}
+
+The webapp is located in \texttt{webapp/} and is structured as a multi-page Streamlit application.
+
+\subsection{Entry Point}
+
+\texttt{webapp/app.py} sets the page configuration and top-level navigation. Each page is a separate file in \texttt{webapp/pages/}.
+
+\subsection{Chart Layer: \texttt{webapp/charts.py}}
+
+All visualisations are implemented as pure functions in \texttt{charts.py}. Every function accepts data as \texttt{pandas.DataFrame} arguments and returns a Plotly \texttt{go.Figure} (or a \texttt{matplotlib.Figure} for Van Krevelen). Key chart functions:
+
+\begin{longtable}{ll}
+\toprule
+\textbf{Function} & \textbf{Description} \\
+\midrule
+\texttt{van\_krevelen\_bubbles()} & H/C vs O/C scatter, bubble size = yield \\
+\texttt{montecarlo\_box()} & Monte Carlo box-and-whisker per impact category \\
+\texttt{comparison\_bar()} & Grouped bar chart for yield basis comparison \\
+\texttt{yield\_vs\_temperature()} & Line chart of yield across T sweep \\
+\bottomrule
+\end{longtable}
+
+\subsection{Service Layer: \texttt{webapp/service.py}}
+
+Handles data loading, caching (\texttt{@st.cache\_data}), and calls to the modelling engine. Decouples the UI pages from data access logic.
+
+\subsection{LCA Metadata: \texttt{webapp/lca\_meta.py}}
+
+Maps internal LCA result column names to display labels and units for the Environmental page.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{LCA Integration}
+
+\subsection{Framework}
+
+The LCA component uses the \href{https://brightway.dev/}{Brightway2} framework (\texttt{bw2data}, \texttt{bw2calc}, \texttt{bw2io}) with the ecoinvent 3.12 cutoff system model as the background database.
+
+\subsection{Notebook Pipeline}
+
+\begin{enumerate}
+    \item \textbf{Setup} — ecoinvent is imported into a local Brightway2 project following \texttt{LCA\_PROJECT/Project biomass/Setup.md}.
+    \item \textbf{Foreground system} — process parameters for each of the nine biomass feedstocks are defined in \texttt{LCA\_process\_config.xlsx}.
+    \item \textbf{Calculation} (\texttt{GREENFUEL\_LCA\_biomass.ipynb}) — single-point LCA scores are computed for five impact categories; Monte Carlo uncertainty analysis (1000+ iterations) is performed for each feedstock.
+    \item \textbf{Results export} — per-feedstock Excel workbooks are written to \texttt{LCA\_results/} and Monte Carlo data to \texttt{Monte\_carlo\_analysis/}.
+    \item \textbf{Aggregation} (\texttt{combine\_all\_excel.ipynb}) — merges individual result files into a combined workbook consumed by the webapp.
+\end{enumerate}
+
+\subsection{Impact Categories}
+
+\begin{longtable}{lll}
+\toprule
+\textbf{Category} & \textbf{Abbreviation} & \textbf{Unit} \\
+\midrule
+Global Warming Potential (100 yr) & GWP100 & kg CO$_2$-eq / FU \\
+Terrestrial Ecotoxicity Potential & TETP & kg 1,4-DCB-eq / FU \\
+Human Toxicity Potential (non-cancer) & HTPnc & kg 1,4-DCB-eq / FU \\
+Agricultural Land Occupation & LOP & m$^2 \cdot$yr / FU \\
+Fossil Fuel Potential & FFP & MJ / FU \\
+\bottomrule
+\end{longtable}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Extending the Toolkit}
+
+\subsection{Adding New Gas Species}
+
+Add an entry to \texttt{species/registry.py} following the existing pattern. Each entry requires $\Delta h_f^\circ$ (kJ/mol), $s^\circ$ (J/mol$\cdot$K), molecular weight, and atom composition.
+
+\subsection{Adding New Feedstocks}
+
+Add a row to the \texttt{w.proximate+ultimate} sheet of the feedstock workbook with all required columns populated. Ensure a matching entry exists in the \texttt{bio-oil values} sheet, or the parser will fall back to the generic bio-oil pseudo-species.
+
+\subsection{Adding New Biomass Types to the LCA}
+
+Duplicate an existing process block in \texttt{LCA\_process\_config.xlsx}, update the activity parameters, and re-run \texttt{GREENFUEL\_LCA\_biomass.ipynb}. The webapp will automatically pick up the new feedstock if the aggregated results workbook is regenerated.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Test Suite}
+
+Tests are in \texttt{tests/unit/} (module-level unit tests) and \texttt{tests/integration/} (end-to-end workflow tests with a small synthetic workbook).
+
+\begin{lstlisting}[language=bash]
+cd BIOMASS_to_BIO-OIL
+python -m unittest discover tests -v
+\end{lstlisting}
+
+All 20+ tests should pass on a clean installation. The integration tests write output to a temporary directory and clean up after themselves.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Known Limitations and Future Work}
+
+\begin{itemize}
+    \item \textbf{Entropy heuristic} — the standard entropy of biomass and bio-oil pseudo-species is currently estimated by a calibrated heuristic rather than a literature-backed group-contribution method. This introduces uncertainty in the absolute Gibbs values but has limited impact on relative feedstock rankings.
+    \item \textbf{Phase 4 (planned) — kinetic correction} — the current model predicts equilibrium yields. An empirical kinetic correction layer to adjust for fast-pyrolysis residence time effects is planned but not yet implemented.
+    \item \textbf{Single bio-oil pseudo-species} — the current model represents bio-oil as a single lumped pseudo-species. A future version may decompose it into a pool of representative compounds (levoglucosan, phenolics, furans, etc.).
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Dependency Summary}
+
+\subsection{Core Engine (\texttt{requirements.txt})}
+
+Key packages: \texttt{numpy}, \texttt{scipy} (SLSQP solver), \texttt{pandas}, \texttt{openpyxl} (Excel I/O), \texttt{thefuzz} (Levenshtein matching), \texttt{matplotlib}.
+
+\subsection{Webapp (\texttt{webapp/requirements\_webapp.txt})}
+
+Additional packages: \texttt{streamlit}, \texttt{plotly}, \texttt{plotnine} (legacy charts; being phased out in favour of Plotly).
+
+\subsection{LCA Notebooks}
+
+\texttt{brightway2}, \texttt{bw2data}, \texttt{bw2calc}, \texttt{bw2io}, \texttt{ecoinvent\_interface} (for initial database import).
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Contact \& Acknowledgements}
+
+Developed at the Technical University of Denmark (DTU). For questions, bug reports, or contributions, please open an issue in the GitHub repository.
+
+Ecoinvent database access was provided through DTU's institutional licence. The ecoinvent database is not distributed with this repository; users must obtain their own licence from \href{https://ecoinvent.org}{ecoinvent.org}.
+
+\end{document}

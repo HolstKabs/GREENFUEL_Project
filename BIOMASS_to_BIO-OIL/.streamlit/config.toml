@@ -1,0 +1,96 @@
+[server]
+enableStaticServing = true
+
+[theme]
+  base = "light"
+    # Primary accent color.
+     primaryColor ="#174C4F"
+
+    # Background color of the app.
+     backgroundColor ="#eed9c4"
+
+    # Background color used for most interactive widgets.
+     secondaryBackgroundColor = "#1f6410"
+
+    # Color used for almost all text.
+     textColor = "#000000"
+
+    # Color used for all links.
+     linkColor = "#1f12da"
+
+    # Whether or not links should be displayed with an underline.
+     linkUnderline = true
+
+    # Text color used for code blocks.
+     codeTextColor = "#2b4710"
+
+    # Background color used for code blocks.
+     codeBackgroundColor = "#e2790f"
+
+    # The font family for all text, except code blocks.
+     font = "sans-serif"
+     baseFontSize = 16
+     baseFontWeight = 500
+
+    # The font family to use for headings.
+     headingFont = "Moliga1"
+
+    # One or more font sizes for h1-h6 headings.
+     headingFontSizes = ["2.875rem", "2.5rem"]
+
+    # One or more font weights for h1-h6 headings.
+    headingFontWeights = [800, 700, 600, 500, 500]
+
+    # The font family to use for code (monospace) in the sidebar.
+   #     codeFont =
+#     codeFontSize =
+#     codeFontWeight =
+
+    # The radius used as basis for the corners of most UI elements.
+     baseRadius = "medium"
+
+    # The radius used as basis for the corners of buttons.
+     buttonRadius = "medium"
+
+    # The color of the border around elements.
+     #borderColor = "#090c0a"
+
+    # The color of the border around dataframes and tables.
+    #
+    # If this isn't set, Streamlit uses `theme.borderColor` instead.
+     dataframeBorderColor = "#909290"
+
+    # The background color of the dataframe's header.
+    #
+    # This color applies to all non-interior cells of the dataframe. This
+    # includes the header row, the row-selection column (if present), and
+    # the bottom row of data editors with a dynamic number of rows. If this
+    # isn't set, Streamlit uses a mix of `theme.backgroundColor` and
+    # `theme.secondaryBackgroundColor`.
+     dataframeHeaderBackgroundColor = "#55af5a"
+
+    # Whether to show a border around input widgets.
+#     showWidgetBorder =
+
+    # Whether to show a vertical separator between the sidebar and the main
+    # content area.
+#     showSidebarBorder =
+
+[theme.sidebar]
+    # Color used for almost all text.
+     textColor = "#fcfcfc"
+    headingFontSizes = "1.75rem"
+    headingFontWeights = 550
+
+[[theme.fontFaces]]
+    family = "Moliga"
+    url = "app/static/Moliga DEMO.otf"
+    weight = "400"
+    style = "normal"
+
+[[theme.fontFaces]]
+    family = "Moliga1"
+    url = "app/static/Moligafonts/moliga-demo.regular.otf"
+    weight = "700"
+    style = "normal"
+

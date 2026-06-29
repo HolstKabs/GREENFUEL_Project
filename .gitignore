@@ -1,0 +1,32 @@
+# ── Virtual environment ──────────────────────────────────────────
+BIOMASS_to_BIO-OIL/.venv/
+
+# ── Licensed ecoinvent database (redistribution prohibited) & credentials ──
+LCA_PROJECT/data and import/
+
+# ── Literature references (PDFs, Excel tables — not redistributable) ──
+BIOMASS_LITTERATURE_REFERENCES/
+
+# ── Runtime-generated output folders ────────────────────────────
+BIOMASS_to_BIO-OIL/yield_results_*/
+
+# ── Python cache ─────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# ── IDE / editor ─────────────────────────────────────────────────
+.vscode/
+.claude/settings.local.json
+
+# ── OS ───────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Third-party literature PDFs (not redistributable) ───────────
+BIOMASS_to_BIO-OIL/Feedstock_reference/Literature_excel/
+
+# ── Large archives ───────────────────────────────────────────────
+*.7z
+*.zip

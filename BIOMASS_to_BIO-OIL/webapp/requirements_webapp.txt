@@ -1,0 +1,9 @@
+# Additional dependencies for the Streamlit web app.
+# Install with: pip install -r webapp/requirements_webapp.txt
+#
+# The core package dependencies (scipy, pandas, openpyxl, etc.) are already
+# listed in requirements.txt at the project root.
+
+streamlit>=1.35.0
+plotly>=5.22.0
+plotnine>=0.15.0
