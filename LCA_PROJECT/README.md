@@ -7,7 +7,7 @@ Small Brightway2 workflow for:
 ## Project structure
 
 - `data and import/Import of ecoinvent 3.9 (2).ipynb`
-  - Imports ecoinvent 3.9.1 into a Brightway project.
+  - Imports ecoinvent 3.12 into a Brightway project.
 - `Project biomass/SURE_LCA_version2.ipynb`
   - Builds a custom `sure_db` activity model from TEA spreadsheet inputs and runs LCIA.
 
