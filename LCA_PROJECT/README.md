@@ -4,38 +4,15 @@ Small Brightway2 workflow for:
 - importing ecoinvent 3.12 in EcoSpold2 format, and
 - running a SURE biomass LCA model with deterministic and Monte Carlo results.
 
-## Project structure
+## Notebook 1: Biomass LCA
 
-- `data and import/Import of ecoinvent 3.9 (2).ipynb`
-  - Imports ecoinvent 3.12 into a Brightway project.
-- `Project biomass/SURE_LCA_version2.ipynb`
-  - Builds a custom `sure_db` activity model from TEA spreadsheet inputs and runs LCIA.
-
-## Notebook 1: ecoinvent import
-
-Notebook: `data and import/Import of ecoinvent 3.9 (2).ipynb`
-
-Main steps:
-1. Import Brightway modules.
-2. Set current Brightway project (`premise`).
-3. Optionally initialize baseline data with `bw2setup()` if `biosphere3` is missing.
-4. Create `SingleOutputEcospold2Importer` for local EcoSpold datasets.
-5. Apply importer strategies and inspect statistics.
-6. Write database as `eco 3.9.1_coff`.
-7. Perform a quick lookup test for electricity activities.
-
-Important note:
-- The dataset path is hard-coded to a local Windows folder and must be changed before running.
-
-## Notebook 2: SURE biomass LCA
-
-Notebook: `Project biomass/SURE_LCA_version2.ipynb`
+Notebook: `Project biomass/GREENFUEL_LCA_biomass.ipynb`
 
 Main steps:
 1. Import Brightway, pandas, numpy, and Monte Carlo tools.
 2. Set Brightway project (`Current`).
 3. Load databases:
-   - `eco 3.9.1_coff`
+   - `eco 3.12_coff`
    - `biosphere3`
    - `sure_db`
 4. Clear existing activities in `sure_db`.
@@ -76,10 +53,7 @@ pip install brightway2 bw2data bw2calc pandas numpy openpyxl tqdm jupyter
 
 ## Typical run order
 
-1. Open `data and import/Import of ecoinvent 3.9 (2).ipynb`.
-2. Update the EcoSpold dataset path.
-3. Run all cells to import ecoinvent into Brightway.
-4. Open `Project biomass/SURE_LCA_version2.ipynb`.
+1. Set the desired Brightway project
 5. Update Excel input/output paths.
 6. Verify Brightway project and database names match your environment.
 7. Run all cells to generate LCIA and Monte Carlo result sheets.
@@ -88,6 +62,6 @@ pip install brightway2 bw2data bw2calc pandas numpy openpyxl tqdm jupyter
 
 Before running notebooks, confirm:
 - Brightway project names (`premise`, `Current`) exist or are changed to your own.
-- Database name `eco 3.9.1_coff` is consistent across both notebooks.
+- Database name `eco 3.12_coff` is consistent across both notebooks.
 - `biosphere3` is available in the active Brightway project.
 - Local file paths are updated for your machine.
