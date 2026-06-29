@@ -1,0 +1,13 @@
+# Root-level requirements for Streamlit Cloud deployment.
+# Covers all packages needed by BIOMASS_to_BIO-OIL/webapp/ and the
+# biomass_pyrolysis_equilibrium core package it imports at runtime.
+
+streamlit>=1.35.0
+plotly>=5.22.0
+plotnine>=0.15.0
+matplotlib>=3.8.0
+pandas>=2.0.0
+numpy>=1.26.0
+scipy>=1.12.0
+openpyxl>=3.1.0
+thefuzz>=0.22.0
