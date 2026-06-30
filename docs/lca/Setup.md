@@ -6,8 +6,6 @@ This tool is created to provide executives with research on the theoretical maxi
 Compute the biomass type's bio-oil yield, this has been done prior to this script, and it's explained in the section of biomass equilibrium.
 The results are saved as an CSV file referred to as yield_results, and they are timestamped to provide the user with the most up-to-date results.
 
-*Reference document(s):"Programming ALI->formulations.md" and "Programming ALI->README".*
-
 ## Second step
 Locate the bio-oil yield, and calculate the FU which can be done as following:
 >**Biomass required to deliver 1 MJ usable bio-oil (kg biomass per 1MJ):**
