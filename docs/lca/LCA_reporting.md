@@ -68,7 +68,6 @@ Full numerical results per biomass type are available in the supplementary Excel
 
 # LCI of biomass conversion with pyrolysis process to bio-oil
 
-## LCI modelling
 
 > **Config file:** all ecoinvent process names, amount formulas and default parameter values are stored in `LCA_PROJECT/Project biomass/LCA_process_config.xlsx` (sheets: *Biomass_Selection*, *Parameters*, *LCI_Mapping*). The notebook reads this file at runtime; edits to process selection or default values should be made there, not in the notebook.
 
@@ -140,12 +139,6 @@ Combustion modelled as foreground biosphere flows (not linked to a background co
 - Sequestration credit added as biosphere flow `Carbon dioxide, to soil or biomass stock` (ReCiPe 2016 GWP CF = −1), amount = `c × 0.80 (C fraction) × 0.80 (100-yr stable fraction) × 44/12` kg CO₂ per FU.
 - Applied uniformly across all three categories. **Report GWP with and without the biochar credit** — this credit can dominate the GWP result and its magnitude should be made explicit.
 
-
-## Data collection and quality assessment
-*Here we should insert the text from the script that writes the tables based on the processes used and the technological, temporal and geographical scores.*
-
-## LCI results
-Reference to excel sheet / table list of all the values calculated for each impact category at midpoint.
 
 ## Sensitivity and Uncertainty Analysis
 
