@@ -1,44 +1,13 @@
 # LCI modelling for each category
 
-This document defines category-specific LCI models for a comparable functional unit:
+This document defines what differs between the three biomass categories in the LCI model. All shared parameter definitions, FU equations, and a worked example are in `docs/lca/Parameters.md`.
 
 - FU = 1 MJ usable bio-oil delivered for marine fuel use
-
-The goal is to test whether higher bio-oil yield from each biomass category also leads to lower impact per FU.
+- The goal is to test whether higher bio-oil yield from each biomass category also leads to lower impact per FU.
 
 > **Changing values:** all default parameters, transport distances, and energy intensities are defined in the *Biomass_Selection* and *Parameters* sheets of `LCA_process_config.xlsx`. Edit values there — not in the notebook.
 
 ---
-
-## Shared parameter set (all categories)
-
-The model parameters and FU equations are the same across all three biomass categories. What differs between categories are the default values assigned to those parameters — see the per-category tables below.
-
-| Parameter | Symbol | Unit | Description |
-|---|---|---|---|
-| Bio-oil yield | x | % | Yield of bio-oil from selected biomass |
-| HHV bio-oil | T | MJ/kg oil | HHV of produced bio-oil; used in FU normalisation |
-| Pyrolysis temperature | T_py | °C | Scenario parameter linked to yield and energy demand |
-| Biomass per FU | y | kg/FU | Biomass required to deliver 1 MJ usable bio-oil |
-| Energy basis | w | J/FU | Energy linked to FU normalisation |
-| Bio-oil per FU | z | kg/FU | Produced bio-oil mass per FU |
-| Bio-char per FU | c | kg/FU | Co-product bio-char mass per FU |
-| Syngas per FU | g | kg/FU | Co-product syngas mass per FU |
-| Electricity intensity | k_el | kWh/kg biomass | Electricity demand of pyrolysis per kg dry biomass |
-| Heat intensity | k_th | MJ/kg biomass | Process heat demand of pyrolysis per kg dry biomass |
-| Feedstock transport distance | d1 | km | Feedstock to pyrolysis plant |
-| Bio-oil transport distance | d2 | km | Pyrolysis plant to port / end use |
-| Co-product transport distance | d3 | km | Bio-char to soil amendment site |
-
-**FU equations:**
-
-- z = 1 / T &nbsp;&nbsp;[kg oil/FU]
-- y = z / (x/100) &nbsp;&nbsp;[kg biomass/FU]
-- w = z × T × 10⁶ &nbsp;&nbsp;[J/FU]
-- c and g are scenario-specific [kg/FU] from yield results
-- Transport work feedstock = d1 × (y/1000) &nbsp;&nbsp;[tonne-km/FU]
-- Transport work bio-oil = d2 × (z/1000) &nbsp;&nbsp;[tonne-km/FU]
-- Transport work co-products = d3 × ((c + g)/1000) &nbsp;&nbsp;[tonne-km/FU]
 
 ## System phases (all categories)
 
