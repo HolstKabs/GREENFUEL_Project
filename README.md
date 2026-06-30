@@ -175,7 +175,7 @@ The test suite covers all core modules across unit and integration levels.
 
 ## License
 
-*To be determined.*
+This project is licensed under the [MIT License](LICENSE) — free to use, modify, and distribute with attribution.
 
 ---
 
