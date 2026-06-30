@@ -70,10 +70,6 @@ Full numerical results per biomass type are available in the supplementary Excel
 
 ## LCI modelling
 
-The unit processes in the system boundary were benchmarked against the 58-study review of fast-pyrolysis
-LCAs (Elkhalifa et al., 2024, *Bioresource Technology Reports*; supplementary Table A.1). Each FU
-(1 MJ usable bio-oil) now includes, per category:
-
 - **Raw material:** category-specific feedstock supply (kept category-specific: Wood = sawmill wood-chip
   production; Agricultural wastes = straw/biowaste; Residues = post-consumer waste wood / biowaste) and
   on-site feedstock storage (silo, amortised).
