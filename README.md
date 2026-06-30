@@ -49,10 +49,6 @@ GREENFUEL_PROJECT/
 └── README.md                    # This file
 ```
 
-> **Not included in this repository:**
-> - `LCA_PROJECT/data and import/` — contains the licensed ecoinvent 3.12 database (redistribution prohibited) and import notebooks with institutional credentials. Set up ecoinvent locally following the instructions in `LCA_PROJECT/Project biomass/Setup.md`.
-> - `BIOMASS_LITTERATURE_REFERENCES/` — research PDFs and intermediate data tables. A full reference list with DOIs will be published alongside the accompanying paper.
-
 ---
 
 ## Requirements
@@ -134,9 +130,12 @@ streamlit run webapp/app.py
 
 The app opens in your browser at `http://localhost:8501`. It provides an interactive multi-page interface covering:
 
-- **Overview** — feedstock database browser and Van Krevelen diagram
-- **Pyrolysis** — yield predictions across temperature and pressure
-- **Environmental** — Monte Carlo LCA results with uncertainty ranges
+- **🏠Home** - Short introduction to project and overview of page tabs.
+- **🔍Biomass Xplorer** - browse all feedstocks, filter by category or yield, and spot the best candidates.
+- **📊Comparing-X/Y's** pick different feedstocks and compare them side-by-side on yield or many other metrics.
+- **🌱Environmental ImpactsX** - explore the LCA results, with Monte Carlo uncertainty ranges, to see how the feedstocks compare on environmental impact.
+- **🚢Transportation of GoodsX** - see how far, long-distance container shipping, can travel and how it changes, when the feedstock types changes.
+- **ℹ️About** - Introduction to development team, research team and funded by. 
 
 ---
 
