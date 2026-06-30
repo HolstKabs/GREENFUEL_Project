@@ -68,6 +68,8 @@ Full numerical results per biomass type are available in the supplementary Excel
 
 # LCI of biomass conversion with pyrolysis process to bio-oil
 
+
+https://github.com/HolstKabs/GREENFUEL_Project/blob/2bb8824b1a273f0ed91d14f5361975d06a04f794/LCA_PROJECT/Project%20biomass/LCA_process_config.xlsx
 ## LCI modelling
 
 - **Raw material:** category-specific feedstock supply (kept category-specific: Wood = sawmill wood-chip
@@ -89,12 +91,6 @@ Full numerical results per biomass type are available in the supplementary Excel
   system-expansion element applied uniformly across all three categories; report GWP **with and without**
   the biochar credit so its (potentially dominant) contribution is transparent.
 
-
-## Data collection and quality assessment
-*Here we should insert the text from the script that writes the tables based on the processes used and the technological, temporal and geographical scores.*
-
-## LCI results
-Reference to excel sheet / table list of all the values calculated for each impact category at midpoint.
 
 ## Sensitivity and Uncertainty Analysis
 
