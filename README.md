@@ -3,12 +3,9 @@
 This repository contains a thermodynamic modelling workflow and Streamlit web application for predicting bio-oil yields from biomass pyrolysis, combined with Life Cycle Assessments (LCA) modelled and programmed for evaluating the environmental impact of biomass-derived fuels. The project was developed at the Technical University of Denmark (DTU) with the goal of comparing biomass-derived bio-oil with conventional marine fuel oil.
 
 ## Webpage for easy access to results
--derived fuesd
-sd
-To see all results in a user-friendly way, go to: **https://greenfuelproject.streamlit.app/** and browse through the pages. You can see theoretical bio-oil yields for specific biomass types, compare different biomass types, read LCA results for 9 modelled and computed biomass types, more are going to be modelled, and finally, look at how far certain biomass types, in theory can transport goods from the transport sector from China to Denmark.
-l
 
-To see all results in a user-friendly way, go to: https://greenfuelproject.streamlit.app/ and browse through the pages. You can look at theoretical oil yields for specific biomass types, compare them, see LCA results for 9 modelled and computed biomass types and get a better understanding of how far a certain biomass type, that has been converted to bio-oil, actually can transport goods from China to Denmark.
+To see all results in a user-friendly way, go to: **https://greenfuelproject.streamlit.app/** and browse through the pages. You can see theoretical bio-oil yields for specific biomass types, compare different biomass types, read LCA results for 9 modelled and computed biomass types, more are going to be modelled, and finally, look at how far certain biomass types, in theory can transport goods from the transport sector from China to Denmark.
+
 ---
 
 ## Repository Structure
