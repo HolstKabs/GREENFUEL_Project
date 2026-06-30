@@ -165,14 +165,23 @@ The test suite covers all core modules across unit and integration levels.
 
 ## Documentation
 
+### Biomass model
 | Document | Description |
 |----------|-------------|
-| `BIOMASS_to_BIO-OIL/docs/userguide.tex` | Step-by-step guide for end users |
-| `BIOMASS_to_BIO-OIL/docs/usermanual.tex` | Technical reference for developers and researchers |
-| `BIOMASS_to_BIO-OIL/docs/WORKFLOW_GUIDE.md` | Model walkthrough with equations |
-| `BIOMASS_to_BIO-OIL/docs/TECHNICAL_SUMMARY.md` | Architecture overview |
-| `BIOMASS_to_BIO-OIL/formulations.md` | Thermodynamic formulations reference |
-| `BIOMASS_to_BIO-OIL/CODEBASE_ANALYSIS.md` | Module-by-module codebase analysis |
+| `docs/biomass_model/userguide.tex` | Step-by-step guide for end users |
+| `docs/biomass_model/usermanual.tex` | Technical reference for developers and researchers |
+| `docs/biomass_model/WORKFLOW_GUIDE.md` | Model walkthrough with equations |
+| `docs/biomass_model/TECHNICAL_SUMMARY.md` | Architecture overview |
+| `BIOMASS_to_BIO-OIL/formulations.md` | Thermodynamic formulations reference (kept with code) |
+| `BIOMASS_to_BIO-OIL/CODEBASE_ANALYSIS.md` | Module-by-module codebase analysis (kept with code) |
+
+### LCA
+| Document | Description |
+|----------|-------------|
+| `docs/lca/Setup.md` | Brightway2 + ecoinvent setup instructions |
+| `docs/lca/Parameters.md` | LCA parameter reference |
+| `docs/lca/LCA_reporting.md` | Reporting methodology notes |
+| `docs/lca/biomass_categories_specific_LCI.md` | Per-biomass LCI details |
 
 ---
 
