@@ -6,117 +6,64 @@ This document defines category-specific LCI models for a comparable functional u
 
 The goal is to test whether higher bio-oil yield from each biomass category also leads to lower impact per FU.
 
-## Biomass category "WOOD"
+> **Changing values:** all default parameters, transport distances, and energy intensities are defined in the *Biomass_Selection* and *Parameters* sheets of `LCA_process_config.xlsx`. Edit values there — not in the notebook.
 
-### 1. Parameter set used for wood (aligned with Parameters.md)
+---
 
-Use one row of parameters per wood scenario (species, moisture basis, and technology assumptions).
+## Shared parameter set (all categories)
 
-| Parameter | Symbol in Parameters.md | Unit | Description |
+The model parameters and FU equations are the same across all three biomass categories. What differs between categories are the default values assigned to those parameters — see the per-category tables below.
+
+| Parameter | Symbol | Unit | Description |
 |---|---|---|---|
-| Bio-oil yield | x | % | Yield of bio-oil from selected wood type |
-| HHV | T | MJ/kg oil | HHV used for the produced bio-oil in FU normalization |
-| Pyrolysis temperature | T_py | degC | Technology/scenario parameter linked to yield and energy demand |
-| Weight of biomass | y | kg/FU | Biomass required per FU |
-| Energy of biomass (or delivered oil energy basis in model) | w | J/FU | Energy linked to FU normalization |
-| Weight of bio-oil | z | kg/FU | Produced bio-oil mass per FU |
-| Weight of bio-char | c | kg/FU | Co-product bio-char mass per FU |
-| Weight of syngas | g | kg/FU | Co-product syngas mass per FU |
-| Transport distance feedstock to pyrolysis | d1 | km | Wet wood transport |
-| Transport distance oil to use/refining | d2 | km | Bio-oil transport |
-| Transport distance co-product route (char/syngas) | d3 | km | Optional transport route for co-products |
+| Bio-oil yield | x | % | Yield of bio-oil from selected biomass |
+| HHV bio-oil | T | MJ/kg oil | HHV of produced bio-oil; used in FU normalisation |
+| Pyrolysis temperature | T_py | °C | Scenario parameter linked to yield and energy demand |
+| Biomass per FU | y | kg/FU | Biomass required to deliver 1 MJ usable bio-oil |
+| Energy basis | w | J/FU | Energy linked to FU normalisation |
+| Bio-oil per FU | z | kg/FU | Produced bio-oil mass per FU |
+| Bio-char per FU | c | kg/FU | Co-product bio-char mass per FU |
+| Syngas per FU | g | kg/FU | Co-product syngas mass per FU |
+| Electricity intensity | k_el | kWh/kg biomass | Electricity demand of pyrolysis per kg dry biomass |
+| Heat intensity | k_th | MJ/kg biomass | Process heat demand of pyrolysis per kg dry biomass |
+| Feedstock transport distance | d1 | km | Feedstock to pyrolysis plant |
+| Bio-oil transport distance | d2 | km | Pyrolysis plant to port / end use |
+| Co-product transport distance | d3 | km | Bio-char to soil amendment site |
 
-Mass and transport per FU should be computed with these equations using your symbols:
+**FU equations:**
 
-- z = 1 / T [kg oil/FU], when T is in MJ/kg and FU = 1 MJ usable bio-oil
-- y = z / (x/100) [kg biomass/FU]
-- w = z * T * 1e6 [J/FU]
-- c and g are scenario-specific co-product masses [kg/FU] (from literature/experimental data)
-- Transport work feedstock = d1 * (y/1000) [tonne-km/FU]
-- Transport work bio-oil = d2 * (z/1000) [tonne-km/FU]
-- Transport work co-products = d3 * ((c + g)/1000) [tonne-km/FU]
+- z = 1 / T &nbsp;&nbsp;[kg oil/FU]
+- y = z / (x/100) &nbsp;&nbsp;[kg biomass/FU]
+- w = z × T × 10⁶ &nbsp;&nbsp;[J/FU]
+- c and g are scenario-specific [kg/FU] from yield results
+- Transport work feedstock = d1 × (y/1000) &nbsp;&nbsp;[tonne-km/FU]
+- Transport work bio-oil = d2 × (z/1000) &nbsp;&nbsp;[tonne-km/FU]
+- Transport work co-products = d3 × ((c + g)/1000) &nbsp;&nbsp;[tonne-km/FU]
 
+## System phases (all categories)
 
-### 2. System phases for wood
-
-1. Raw material supply (wood production and handling)
+1. Raw material supply (category-specific feedstock production and handling)
 2. Conversion (pyrolysis to bio-oil, char, syngas)
-3. Transportation (feedstock, oil, optional co-products)
-4. Use phase (combustion/use of bio-oil)
-5. End-of-life and/or substitution credits for co-products
+3. Transportation (feedstock, bio-oil, co-products)
+4. Use phase (marine combustion of bio-oil)
+5. Co-product credits (avoided heat from syngas; biochar carbon sequestration)
 
-## Biomass category "AGRICULTURAL WASTES"
+---
 
-### 1. Parameter set used for agricultural wastes (aligned with Parameters.md)
+## Category-specific default values
 
-Use one row of parameters per agricultural waste scenario (species, moisture basis, and technology assumptions).
+The table below shows what differs between categories. All values come from the *Biomass_Selection* sheet of `LCA_process_config.xlsx`.
 
-| Parameter | Symbol in Parameters.md | Unit | Description |
+| Parameter | Wood | Agricultural wastes | Residues and wastes |
 |---|---|---|---|
-| Bio-oil yield | x | % | Yield of bio-oil from selected agricultural waste type |
-| HHV | T | MJ/kg oil | HHV used for the produced bio-oil in FU normalization |
-| Pyrolysis temperature | T_py | degC | Technology/scenario parameter linked to yield and energy demand |
-| Weight of biomass | y | kg/FU | Biomass required per FU |
-| Energy of biomass (or delivered oil energy basis in model) | w | J/FU | Energy linked to FU normalization |
-| Weight of bio-oil | z | kg/FU | Produced bio-oil mass per FU |
-| Weight of bio-char | c | kg/FU | Co-product bio-char mass per FU |
-| Weight of syngas | g | kg/FU | Co-product syngas mass per FU |
-| Transport distance feedstock to pyrolysis | d1 | km | Agricultural residue collection transport |
-| Transport distance oil to use/refining | d2 | km | Bio-oil transport |
-| Transport distance co-product route (char/syngas) | d3 | km | Optional transport route for co-products |
+| k_el (kWh/kg biomass) | 0.15 | 0.18 | 0.15 |
+| k_th (MJ/kg biomass) | 0.75 | 0.90 | 0.75 |
+| d1 — feedstock transport (km) | 50 | 100 | 75 |
+| d2 — bio-oil transport (km) | 100 | 150 | 100 |
+| d3 — co-product transport (km) | 150 | 200 | 100 |
+| Feedstock supply proxy | Sawmill wood chips (hardwood/softwood) | Straw market (dry) / biowaste market (fruit/olive) | Post-consumer waste wood (mill residues) / biowaste (fruit/seed) |
 
-Mass and transport per FU should be computed with these equations using your symbols:
-
-- z = 1 / T [kg oil/FU], when T is in MJ/kg and FU = 1 MJ usable bio-oil
-- y = z / (x/100) [kg biomass/FU]
-- w = z * T * 1e6 [J/FU]
-- c and g are scenario-specific co-product masses [kg/FU] (from literature/experimental data)
-- Transport work feedstock = d1 * (y/1000) [tonne-km/FU]
-- Transport work bio-oil = d2 * (z/1000) [tonne-km/FU]
-- Transport work co-products = d3 * ((c + g)/1000) [tonne-km/FU]
-
-### 2. System phases for agricultural wastes
-
-1. Raw material supply (agricultural residue collection and handling)
-2. Conversion (pyrolysis to bio-oil, char, syngas)
-3. Transportation (feedstock, oil, optional co-products)
-4. Use phase (combustion/use of bio-oil)
-5. End-of-life and/or substitution credits for co-products
-
-## Biomass category "RESIDUES AND WASTES"
-
-### 1. Parameter set used for residues and wastes (aligned with Parameters.md)
-
-Use one row of parameters per residue/waste scenario (species, moisture basis, and technology assumptions).
-
-| Parameter | Symbol in Parameters.md | Unit | Description |
-|---|---|---|---|
-| Bio-oil yield | x | % | Yield of bio-oil from selected residue/waste type |
-| HHV | T | MJ/kg oil | HHV used for the produced bio-oil in FU normalization |
-| Pyrolysis temperature | T_py | degC | Technology/scenario parameter linked to yield and energy demand |
-| Weight of biomass | y | kg/FU | Biomass required per FU |
-| Energy of biomass (or delivered oil energy basis in model) | w | J/FU | Energy linked to FU normalization |
-| Weight of bio-oil | z | kg/FU | Produced bio-oil mass per FU |
-| Weight of bio-char | c | kg/FU | Co-product bio-char mass per FU |
-| Weight of syngas | g | kg/FU | Co-product syngas mass per FU |
-| Transport distance feedstock to pyrolysis | d1 | km | Residue/waste collection transport |
-| Transport distance oil to use/refining | d2 | km | Bio-oil transport |
-| Transport distance co-product route (char/syngas) | d3 | km | Optional transport route for co-products |
-
-Mass and transport per FU should be computed with these equations using your symbols:
-
-- z = 1 / T [kg oil/FU], when T is in MJ/kg and FU = 1 MJ usable bio-oil
-- y = z / (x/100) [kg biomass/FU]
-- w = z * T * 1e6 [J/FU]
-- c and g are scenario-specific co-product masses [kg/FU] (from literature/experimental data)
-- Transport work feedstock = d1 * (y/1000) [tonne-km/FU]
-- Transport work bio-oil = d2 * (z/1000) [tonne-km/FU]
-- Transport work co-products = d3 * ((c + g)/1000) [tonne-km/FU]
-
-### 2. System phases for residues and wastes
-
-1. Raw material supply (residue/waste collection and handling)
-2. Conversion (pyrolysis to bio-oil, char, syngas)
-3. Transportation (feedstock, oil, optional co-products)
-4. Use phase (combustion/use of bio-oil)
-5. End-of-life and/or substitution credits for co-products
+**Rationale for differences:**
+- Agricultural wastes use slightly higher energy intensities (k_el, k_th) due to greater moisture variability and denser material handling.
+- Transport distances reflect the typical collection radius for each feedstock type: wood from nearby forestry/sawmills, agricultural residues from a wider farm catchment, and industrial residues from short-haul industrial collection.
+- The feedstock supply proxy differs because each category has a distinct origin in ecoinvent 3.12 — see the *LCI_Mapping* sheet of `LCA_process_config.xlsx` for the exact process names and locations used in the model.
