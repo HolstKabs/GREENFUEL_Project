@@ -2,6 +2,8 @@
 
 ## Goal
 
+This study quantifies the life-cycle environmental performance of fast-pyrolysis bio-oil produced from nine biomass feedstocks as a potential drop-in marine fuel, with the aim of comparing it against conventional marine heavy fuel oil (HFO). The study is comparative and attributional in nature, following a Situation A micro-level decision context. Results are intended for internal research use at the Technical University of Denmark (DTU) and for public communication via the interactive web application at [https://greenfuelproject.streamlit.app/](https://greenfuelproject.streamlit.app/).
+
 ## Scope
 
 ### Functional Unit
@@ -20,6 +22,9 @@
 With this equation it's possible to calculate the required amount of biomass to produce 1 MJ of usable bio-oil.
 
 ### Reference flow
+
+1 MJ of usable bio-oil delivered for marine propulsion. The required biomass input per functional unit is derived from the thermodynamic equilibrium bio-oil yield, which represents an upper bound on achievable yield; see the functional unit equation above.
+
 ### Modelling framework and decision context
 
 Cut-off and decision context is Situation A - Micro level.
@@ -28,7 +33,7 @@ Cut-off and decision context is Situation A - Micro level.
 
 As this report will be dynamically modelling several biomass types and calculating the impacts, the biomass types have been categorized to create category-type-specific LCI modelling. This results in not one specific system boundary but several, thus a section for each biomass category can be read in section "Biomass_categories_specific_LCI.md."
 
-### Geographical, temporal and technological representativenes
+### Geographical, temporal and technological representativeness
 
 Background modelling with mostly generic processes provided by the EcoInvent database will be used for an assumption-based study.
 - **Geographical transportation:** accounted for average distance to nearest biomass production site, generalized for all biomass categories, potential and need to distinguish between feedstock types for more accurate results
@@ -37,11 +42,29 @@ Background modelling with mostly generic processes provided by the EcoInvent dat
 
 ### Basis for Impact Assessment
 
-This report will be using Brightway2.5 and EcoInvent Database 3.12 to model and calculate potential impacts of the described scope of system. The chosen LCIA method is **xxx** where both midpoint and endpoint categories will be scrutinized to focus on four impact categories, which will ultimately, be presented and interpreted in this report. A table with results for all impact categories will be provided in the supplementary data.
+This study uses Brightway2.5 and the EcoInvent Database 3.12 (cutoff system model) to model and calculate potential impacts. The chosen LCIA method is **ReCiPe 2016 Midpoint (H)**. The following five impact categories are presented and interpreted in this report and in the web application:
+
+| # | Impact category | Abbreviation | Unit |
+|---|---|---|---|
+| 1 | Global Warming Potential (100 yr) | GWP100 | kg CO₂-eq |
+| 2 | Terrestrial Ecotoxicity Potential | TETP | kg 1,4-DCB-eq |
+| 3 | Human Toxicity Potential (non-cancer) | HTPnc | kg 1,4-DCB-eq |
+| 4 | Agricultural Land Occupation | LOP | m²·yr |
+| 5 | Fossil Fuel Potential | FFP | MJ |
+
+Full results across all 18 ReCiPe midpoint categories and 3 endpoint areas are available in the supplementary Excel workbooks in `LCA_PROJECT/Project biomass/LCA_results/`.
 
 ### Reporting of results
 
-To be used for internal purposes and for a web application showing the potential impacts when choosing different biomass types. The results will be a comparable table where the reader can see how far we can transport a full container ship, fuelled with xx tonnes of biomass and how high. the four chosen, environmental impacts is going to be for each scenario.
+Results are published publicly at **[https://greenfuelproject.streamlit.app/](https://greenfuelproject.streamlit.app/)** across five interactive pages:
+
+1. **Home** — project introduction and overview
+2. **Biomass Xplorer** — browse and filter all feedstocks by yield and category
+3. **Comparison** — side-by-side yield and property comparison across selected biomass types
+4. **Environmental Impacts** — LCA results with Monte Carlo uncertainty ranges for each of the five impact categories
+5. **Transportation of Goods** — scenario explorer showing how far a fully loaded container ship travelling from China to Denmark can sail when fuelled by bio-oil from each biomass type, compared against conventional HFO
+
+Full numerical results per biomass type are available in the supplementary Excel workbooks.
 
 # LCI of biomass conversion with pyrolysis process to bio-oil
 
