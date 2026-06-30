@@ -75,47 +75,55 @@ The foreground LCI is structured in six phases, applied uniformly across all thr
 
 ### Ph1 — Raw material supply
 
-Feedstock supply is category-specific. The feedstock process used for each biomass type is defined in the *LCI_Mapping* sheet of `LCA_process_config.xlsx`. Amount = **y** kg per FU. Feedstock on-site storage (tower silo) is amortised per kg biomass; expected negligible.
+Category-specific feedstock process (ecoinvent 3.12):
+
+| Category | Default ecoinvent process | Location |
+|---|---|---|
+| Wood | `wood chips production, hardwood, at sawmill` (softwood alt. for spruce/pine/fir) | Europe w/o CH |
+| Agricultural wastes | `market for straw` (dry residues) / `market for biowaste` (fruit/olive residues) | RER / RoW |
+| Residues and wastes | `market for waste wood, post-consumer` (mill residues) / `market for biowaste` (fruit/seed) | RER / RoW |
+
+Amount = **y** kg per FU. Feedstock on-site storage (tower silo, plastic) amortised at 1×10⁻⁵ m³ per kg biomass; expected negligible.
 
 ### Ph2 — Pre-treatment and pyrolysis conversion
 
-- **Feedstock drying:** SEC_dry = 3 MJ / kg water evaporated; applied only where as-received moisture exceeds the 10 wt% fast-pyrolysis target. Amount = `water_evap × 3.0` MJ per FU (zero for already-dry feedstocks).
-- **Comminution:** electric wood chipper, amount = **y** kg per FU; used as a size-reduction proxy for non-wood categories.
-- **Electricity:** amount = `k_el × y` kWh per FU — see category parameter table below.
-- **Process heat:** amount = `k_th × y` MJ per FU — see category parameter table below.
-- **Process water:** amount = `0.05 × y` kg per FU (quenching and scrubbing); uniform across all categories.
-- **Plant infrastructure:** capital-goods proxy, amortised at `4×10⁻¹⁰ × z` units per FU; negligible.
+- **Feedstock drying:** heat from industrial natural-gas furnace, `SEC_dry = 3 MJ / kg water evaporated`; applied only where as-received moisture exceeds the 10 wt% fast-pyrolysis target. Amount = `water_evap × 3.0` MJ per FU (zero for already-dry feedstocks).
+- **Comminution:** electric wood chipper (`wood chipping, industrial residual wood, stationary electric chipper`, RER), amount = **y** kg per FU; used as a size-reduction proxy for non-wood categories.
+- **Electricity:** `market group for electricity, medium voltage`, RER. Amount = `k_el × y` kWh per FU (default: 0.15 kWh/kg for Wood and Residues; 0.18 kWh/kg for Agricultural wastes).
+- **Process heat:** `heat production, natural gas, at industrial furnace >100 kW`, Europe w/o CH. Amount = `k_th × y` MJ per FU (default: 0.75 MJ/kg for Wood and Residues; 0.90 MJ/kg for Agricultural wastes).
+- **Process water:** `market for tap water`, Europe w/o CH. Amount = `0.05 × y` kg per FU (quenching and scrubbing).
+- **Plant infrastructure:** `chemical factory construction, organics`, RER. Amount = `4×10⁻¹⁰ × z` units per FU (capital-goods proxy, ecoinvent organic-chemicals convention; negligible contribution).
 
 ### Ph2b — Bio-oil stabilisation
 
-Light stabilisation (mild hydrodeoxygenation / deacidification) before marine use. Amounts are uniform across all categories:
+Light stabilisation (mild hydrodeoxygenation / deacidification) before marine use:
 
-| Input | Amount per FU |
-|---|---|
-| Hydrogen | 0.01 × z kg |
-| Electricity | 0.02 × z kWh |
-| Process heat | 0.10 × z MJ |
+| Input | ecoinvent process | Amount |
+|---|---|---|
+| Hydrogen | `market for hydrogen, gaseous, low pressure`, RER | 0.01 × z kg/FU |
+| Electricity | `market group for electricity, medium voltage`, RER | 0.02 × z kWh/FU |
+| Process heat | `heat production, natural gas, at industrial furnace >100 kW`, Europe w/o CH | 0.10 × z MJ/FU |
 
 Mass loss during stabilisation is assumed negligible.
 
 ### Ph3 — Transport and storage
 
-Road freight for three flows. Distances are category-specific — see parameter table below.
+Road freight (`market for transport, freight, lorry 7.5–16 t, diesel, EURO 6`, RER) for three flows:
 
-| Flow | Amount formula |
-|---|---|
-| Feedstock → pyrolysis plant | `d1 × (y / 1000)` tonne-km |
-| Bio-oil → port / end use | `d2 × (z / 1000)` tonne-km |
-| Bio-char → soil amendment | `d3 × (c / 1000)` tonne-km |
+| Flow | Distance (default) | Amount formula |
+|---|---|---|
+| Feedstock → pyrolysis plant | d1 (Wood 50 km / Agri. 100 km / Residues 75 km) | `d1 × (y / 1000)` tonne-km |
+| Bio-oil → port / end use | d2 (Wood 100 km / Agri. 150 km / Residues 100 km) | `d2 × (z / 1000)` tonne-km |
+| Bio-char → soil amendment | d3 (Wood 150 km / Agri. 200 km / Residues 100 km) | `d3 × (c / 1000)` tonne-km |
 
-Bio-oil tank storage is amortised at `1×10⁻⁷ units / kg bio-oil`; negligible.
+Bio-oil tank storage (`storage production, 10 000 l`, RER) amortised at 1×10⁻⁷ units per kg bio-oil; expected negligible.
 
 ### Ph4 — Use (marine combustion)
 
-Combustion modelled as foreground biosphere flows:
+Combustion modelled as foreground biosphere flows (not linked to a background combustion process):
 
-- **Biogenic CO₂:** amount = `z × C_bio × 44/12` kg per FU (C_bio = 0.60 kg C/kg bio-oil; GWP CF = 0).
-- **NOx, CO, NMVOC, PM:** scaled from marine-engine diesel proxy per MJ bio-oil.
+- **Biogenic CO₂:** `Carbon dioxide, non-fossil` (GWP CF = 0 in ReCiPe 2016), amount = `z × C_bio × 44/12` kg per FU (C_bio = 0.60 kg C/kg bio-oil).
+- **NOx, CO, NMVOC, PM:** scaled from `diesel, burned in fishing vessel` proxy per MJ bio-oil.
 - **SO₂/SOx:** diesel proxy value × 0.10 (bio-oil assumed ~10% of marine diesel sulfur content).
 - Fossil CO₂ and diesel supply chain excluded.
 
@@ -123,42 +131,13 @@ Combustion modelled as foreground biosphere flows:
 
 **Syngas heat credit (avoided burden):**
 - Gross available heat = `g × HHV_syn × η_comb` (HHV_syn = 12 MJ/kg; η_comb = 0.85).
-- Credit = `−min(gross syngas heat, k_th × y)` MJ per FU — **capped at internal heat demand**. Surplus syngas beyond internal demand is not credited in the current model scope.
+- Credit = `−min(gross syngas heat, k_th × y)` MJ per FU — **capped at internal heat demand** to avoid crediting energy the plant does not actually displace externally. Surplus syngas beyond internal demand is not credited in the current model scope.
+- Avoided process: `heat production, natural gas, at industrial furnace >100 kW`, Europe w/o CH.
 
 **Biochar carbon-sequestration credit:**
-- Biochar spread on soil (proxy: solid manure spreading), amount = **c** kg per FU.
-- Sequestration credit = `c × 0.80 (C fraction) × 0.80 (100-yr stable fraction) × 44/12` kg CO₂ per FU, added as biosphere flow `Carbon dioxide, to soil or biomass stock` (ReCiPe 2016 GWP CF = −1).
-- Applied uniformly across all categories. **Report GWP with and without the biochar credit** — this credit can dominate the result and its contribution should be made explicit.
-
----
-
-## Category parameters
-
-All values sourced from the *Biomass_Selection* sheet of `LCA_process_config.xlsx`.
-
-### Wood
-
-| Biomass | Yield range | Bio-oil yield (kg/kg a.r.) | HHV bio-oil (MJ/kg) | Pyrolysis temp. (°C) | Moisture a.r. (wt%) | k_el (kWh/kg) | k_th (MJ/kg) | d1 (km) | d2 (km) | d3 (km) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Oak wood | Low (≤25%) | 0.2145 | 33.01 | 600 | 10.5 | 0.15 | 0.75 | 50 | 100 | 150 |
-| Branches and leaves from poplar tree | Mid (45–55%) | 0.3984 | 17.11 | 575 | 6.2 | 0.15 | 0.75 | 50 | 100 | 150 |
-| Poplar | High (≥75%) | 0.6619 | 17.11 | 350 | 0.1 | 0.15 | 0.75 | 50 | 100 | 150 |
-
-### Agricultural wastes
-
-| Biomass | Yield range | Bio-oil yield (kg/kg a.r.) | HHV bio-oil (MJ/kg) | Pyrolysis temp. (°C) | Moisture a.r. (wt%) | k_el (kWh/kg) | k_th (MJ/kg) | d1 (km) | d2 (km) | d3 (km) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Walnut shell | Low (≤25%) | 0.0494 | 23.92 | 600 | 0 | 0.18 | 0.90 | 100 | 150 | 200 |
-| Peanut hulls | Mid (45–55%) | 0.1423 | 32.54 | 600 | 0 | 0.18 | 0.90 | 100 | 150 | 200 |
-| Olive kernels | High (≥75%) | 0.6145 | 31.69 | 625 | 13.8 | 0.18 | 0.90 | 100 | 150 | 200 |
-
-### Residues and wastes
-
-| Biomass | Yield range | Bio-oil yield (kg/kg a.r.) | HHV bio-oil (MJ/kg) | Pyrolysis temp. (°C) | Moisture a.r. (wt%) | k_el (kWh/kg) | k_th (MJ/kg) | d1 (km) | d2 (km) | d3 (km) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Fir mill waste | Low (≤25%) | 0.1149 | 24.40 | 600 | 0 | 0.15 | 0.75 | 75 | 100 | 100 |
-| Maple fruit | Mid (45–55%) | 0.3443 | 31.18 | 450 | 8.7 | 0.15 | 0.75 | 75 | 100 | 100 |
-| Grape seeds | High (≥75%) | 0.6526 | 35.16 | 525 | 0 | 0.15 | 0.75 | 75 | 100 | 100 |
+- Biochar spread on soil (proxy: `solid manure loading and spreading, by hydraulic loader and spreader`, RoW), amount = **c** kg per FU.
+- Sequestration credit added as biosphere flow `Carbon dioxide, to soil or biomass stock` (ReCiPe 2016 GWP CF = −1), amount = `c × 0.80 (C fraction) × 0.80 (100-yr stable fraction) × 44/12` kg CO₂ per FU.
+- Applied uniformly across all three categories. **Report GWP with and without the biochar credit** — this credit can dominate the GWP result and its magnitude should be made explicit.
 
 
 ## Sensitivity and Uncertainty Analysis
