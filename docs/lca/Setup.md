@@ -22,7 +22,7 @@ This creates a timestamped folder (e.g. `yield_results_20250630_143200/`) contai
 
 ### 2. Install ecoinvent 3.12 in a Brightway project
 
-The notebook requires ecoinvent 3.12 cutoff to be imported into a local Brightway2.5 project. This is a one-time setup. Ecoinvent credentials and the database file are not distributed with this repository (DTU institutional licence required).
+The notebook requires ecoinvent 3.12 cutoff to be imported into a local Brightway2.5 project. This is a one-time setup. Ecoinvent credentials and the database file are not distributed with this repository (licence required).
 
 ```python
 import bw2io as bi
@@ -66,15 +66,13 @@ Run all cells **top to bottom** after editing Section 1. The steps are:
 | **1.5** | Loads `LCA_process_config.xlsx` (sheets: *Biomass_Selection*, *LCI_Mapping*) |
 | **2** | Selects the chosen biomass by name match; extracts yield parameters (x, T, y, z, c, g) |
 | **3** | Connects to the Brightway project and validates ecoinvent + biosphere databases |
-| **4** | Looks up all ecoinvent background processes defined in *LCI_Mapping* |
-| **5** | Builds the foreground LCI activity with all exchanges (Ph1–Ph5) scaled to the FU |
+| **4** | Looks up all ecoinvent background processes defined in *LCI_Mapping* (very important to check the print statements in terminal, if the script finds the processes)|
+| **5** | Builds the foreground LCI activity with all exchanges (Ph1–Ph5) scaled to the FU (again here check the terminal to see if there are any errors when building the foreground database) |
 | **6** | Validates all exchanges — prints a warning if any are invalid |
 | **7** | Runs LCIA across all 18 ReCiPe 2016 Midpoint (H) categories |
 | **7b** | Runs endpoint LCIA — ReCiPe 2016 Endpoint (H), 3 areas of protection (Human Health, Ecosystem Quality, Natural Resources) |
 | **8** | Exports results to `LCA_results/lca_results_{BIOMASS_NAME}.xlsx` (sheets: *All Categories*, *Top 4*, endpoint) |
 | **9** | Runs Monte Carlo uncertainty analysis for the top 4 impact categories; saves samples to `Monte_carlo_analysis/` |
-
-Do **not** edit cells below the `ENGINE — do not edit cells below this line` divider.
 
 ---
 
